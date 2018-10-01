@@ -3,7 +3,7 @@
  *
  *      Author: robotemperor
  */
-#include <robot1/motor.h>
+#include <mobile_robot/motor.h>
 
 DcMotorForRaspberryPi::DcMotorForRaspberryPi()
 {

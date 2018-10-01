@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(robot1)
+project(mobile_robot)
 
 add_compile_options(-std=c++11)
 
@@ -37,10 +37,6 @@ catkin_package(
 
 include_directories(include ${catkin_INCLUDE_DIRS} )
 
- add_executable(motor src/motor.cpp src/motor_algorithm.cpp)
- target_link_libraries(motor ${catkin_LIBRARIES} wiringPi)
- add_dependencies(motor robot1_generate_messages_cpp)
-
-
-
-
+ add_executable(mobile_robot_motor src/motor.cpp src/motor_algorithm.cpp)
+ target_link_libraries(mobile_robot_motor ${catkin_LIBRARIES} wiringPi)
+ add_dependencies(mobile_robot_motor robot1_generate_messages_cpp)
