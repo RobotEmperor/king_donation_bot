@@ -35,8 +35,8 @@
 #include <geometry_msgs/Twist.h>
 
 //custom header
-#include <robot1/motor_cmd.h>
-#include <robot1/motor.h>
+#include <mobile_robot/motor_cmd.h>
+#include <mobile_robot/motor.h>
 
 class TrajectoryGenerator
 {

@@ -3,7 +3,7 @@
  *
  *      Author: robotemperor
  */
-#include <robot1/motor_algorithm.h>
+#include <mobile_robot/motor_algorithm.h>
 
 //////////////////////////////////////////////////////////////////////////////
 TrajectoryGenerator::TrajectoryGenerator()
