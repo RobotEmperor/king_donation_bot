@@ -3,7 +3,7 @@
  *
  *      Author: robotemperor
  */
-#include <mobile_robot/motor_algorithm.h>
+#include <robot1/motor_algorithm.h>
 
 //////////////////////////////////////////////////////////////////////////////
 TrajectoryGenerator::TrajectoryGenerator()
@@ -70,7 +70,7 @@ void initialize()
   reference_distance = 0;
 
   motor1 = new DcMotorForRaspberryPi(156,100,2);
-  motor2 = new DcMotorForRaspberryPi(399,100,2);
+  motor2 = new DcMotorForRaspberryPi(156,100,2);
 
   tra_motor1 = new TrajectoryGenerator;
   tra_motor2 = new TrajectoryGenerator;
@@ -266,8 +266,12 @@ void controlFunction(const ros::TimerEvent&)
 */
   //printf("result rpm :: %f \n", motor1->pwm_value_motor);
   motor1->pwm_value_motor = tra_motor1->linear_function(motor1->speed_motor, motor1->acceleration_value);
+  motor2->pwm_value_motor = tra_motor2->linear_function(motor2->speed_motor, motor2->acceleration_value);
+
   pwmWrite(motor1_PWM, (int) motor1->pwm_value_motor);
+  pwmWrite(motor2_PWM, (int) motor2->pwm_value_motor);
   printf("motor1->pwm_value_motor:: %f \n", motor1->pwm_value_motor);
+  printf("motor2->pwm_value_motor:: %f \n", motor2->pwm_value_motor);
 
 //  pwmWrite(motor2_PWM, (int) motor2->pwm_value_motor);
 
@@ -295,20 +299,20 @@ int main (int argc, char **argv)
 
   pinMode(motor1_IN1, OUTPUT);
   pinMode(motor1_BREAK, OUTPUT);
+  pinMode(motor1_DIR, OUTPUT);
   pinMode(motor1_FG1, INPUT);
-  pinMode(motor1_FG2, INPUT);
 
   pinMode(motor2_IN1, OUTPUT);
+  pinMode(motor2_BREAK, OUTPUT);
+  pinMode(motor2_DIR, OUTPUT);
   pinMode(motor2_FG1, INPUT);
-  pinMode(motor2_FG2, INPUT);
+
 
   wiringPiISR(motor1_FG1, INT_EDGE_RISING, &motor1_encoder_1);
-  wiringPiISR(motor1_FG2, INT_EDGE_RISING, &motor1_encoder_2);
   wiringPiISR(motor2_FG1, INT_EDGE_RISING, &motor2_encoder_1);
-  wiringPiISR(motor2_FG2, INT_EDGE_RISING, &motor2_encoder_2);
 
   pinMode(motor1_PWM, PWM_OUTPUT);
- // pinMode(motor2_PWM, PWM_OUTPUT);
+  pinMode(motor2_PWM, PWM_OUTPUT);
   pwmSetMode (PWM_MODE_MS);
   pwmSetRange(512);
   pwmSetClock(45);
@@ -316,10 +320,12 @@ int main (int argc, char **argv)
 //test
   digitalWrite(motor1_IN1,LOW);
   digitalWrite(motor1_BREAK,LOW);
+  digitalWrite(motor2_IN1,LOW);
+  digitalWrite(motor2_BREAK,LOW);
 
 
   pwmWrite(motor1_PWM, 0);
-  //pwmWrite(motor2_PWM, 0);
+  pwmWrite(motor2_PWM, 0);
 
   
 
@@ -343,7 +349,7 @@ int main (int argc, char **argv)
   delete tra_motor1;
   delete tra_motor2;
   pwmWrite(motor1_PWM, 0);
- // pwmWrite(motor2_PWM, 0);
+  pwmWrite(motor2_PWM, 0);
 
   return 0;
 }

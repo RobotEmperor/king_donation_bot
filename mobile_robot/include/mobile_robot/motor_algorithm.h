@@ -6,19 +6,21 @@
 
 //pin information
 
-#define motor1_IN1   26
-#define motor1_BREAK 21
-#define motor1_PWM   19
+#define motor1_BREAK 22 // Break
+#define motor1_IN1   5 // Enable
+#define motor1_DIR   3
 
-#define motor1_FG1 6 //22
-#define motor1_FG2 5
+#define motor1_PWM   13 // pwm
+#define motor1_FG1 9 // FG
 
 
-#define motor2_IN1 4
-#define motor2_PWM 13
 
-#define motor2_FG1 22 //23
-#define motor2_FG2 27
+#define motor2_BREAK 27 // Break
+#define motor2_IN1   6 // Enable
+#define motor2_DIR   4
+
+#define motor2_PWM   18 // pwm
+#define motor2_FG1 10 // FG
 
 
 #include <ros/ros.h>
@@ -33,8 +35,8 @@
 #include <geometry_msgs/Twist.h>
 
 //custom header
-#include <mobile_robot/motor_cmd.h>
-#include <mobile_robot/motor.h>
+#include <robot1/motor_cmd.h>
+#include <robot1/motor.h>
 
 class TrajectoryGenerator
 {
