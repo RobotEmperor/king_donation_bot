@@ -56,23 +56,9 @@ class TrajectoryGenerator
 
 
 //ros communication
-ros::Publisher  angle_control_done_pub;
-ros::Publisher  desired_rpm1_pub;
-ros::Publisher  desired_rpm2_pub;
 
-ros::Publisher  result_rpm1_pub;
-ros::Publisher  result_rpm2_pub;
-
-ros::Subscriber motor_theta_dist_sub;
-
-//message for communication
-std_msgs::String angle_control_done_msg;
-std_msgs::Float64  desired_rpm1_msg;
-std_msgs::Float64  desired_rpm2_msg;
-
-std_msgs::Float64  result_rpm1_msg;
-std_msgs::Float64  result_rpm2_msg;
-
+ros::Subscriber motor_first_command_sub;
+ros::Subscriber motor_second_command_sub;
 
 DcMotorForRaspberryPi* motor1;
 DcMotorForRaspberryPi* motor2;
@@ -91,7 +77,8 @@ void initialize();
 void algorithm(double angle, double distance);
 void motor_control(int id, int motor_line1, int mode, bool direction, int desired_speed_rpm, int angle, bool on_off);
 
-void motor_theta_dist_callback(const std_msgs::Float64MultiArray::ConstPtr& msg);
+void motor_first_command_callback(const mobile_robot::motor_cmd::ConstPtr& msg);
+void motor_second_command_callback(const mobile_robot::motor_cmd::ConstPtr& msg);
 
 //timer
 void controlFunction(const ros::TimerEvent&);
