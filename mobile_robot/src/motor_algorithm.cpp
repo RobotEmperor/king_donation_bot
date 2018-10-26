@@ -171,8 +171,8 @@ void controlFunction(const ros::TimerEvent&)
   pwmWrite(motor1_PWM, (int) motor1->pwm_value_motor);
   pwmWrite(motor2_PWM, (int) motor2->pwm_value_motor);
 
-  printf("motor1->pwm_value_motor:: %f \n", motor1->pwm_value_motor);
-  printf("motor2->pwm_value_motor:: %f \n", motor2->pwm_value_motor);
+  printf("motor1->direction:: %d \n", motor1->direction);
+  printf("motor2->direction:: %d \n", motor2->direction);
 
 }
 int main (int argc, char **argv)
