@@ -50,7 +50,7 @@ double speed_ratio_rad;
 //function
 void initialize();
 void wheel_move_function(double x, double y);
-void wheel_direction_group(bool motor1, bool motor2, bool motor3, bool motor4);
+void wheel_direction_group(int8_t motor1, int8_t motor2, int8_t motor3, int8_t motor4);
 void wheel_rotation(bool rotation_left, bool rotation_right);
 //callback
 void joy_callback(const sensor_msgs::Joy::ConstPtr& msg);

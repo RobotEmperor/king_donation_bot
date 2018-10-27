@@ -19,7 +19,7 @@ DcMotorForRaspberryPi::DcMotorForRaspberryPi(int encoder_pulse_per_rotation, int
   encoder_pulse_position1 = 0;
   encoder_pulse_position2 = 0;
 
-  acceleration_value = 100; // 
+  acceleration_value = 200; //
 
   p_gain_position_ = 0.01;
   p_gain_speed_ = 0.5;

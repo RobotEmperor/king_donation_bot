@@ -75,7 +75,7 @@ double reference_distance;
 //function
 void initialize();
 void algorithm(double angle, double distance);
-void motor_control(int id, int motor_line1, int mode, bool direction, int desired_speed_rpm, int angle, bool on_off);
+void motor_control(int pwm_pin, int direction_pin, int mode, int desired_speed_rpm, int angle, bool on_off, DcMotorForRaspberryPi* motor, TrajectoryGenerator* tra_value);
 
 void motor_first_command_callback(const mobile_robot::motor_cmd::ConstPtr& msg);
 void motor_second_command_callback(const mobile_robot::motor_cmd::ConstPtr& msg);

@@ -107,55 +107,36 @@ void motor2_encoder_2(void)
 void motor_first_command_callback(const mobile_robot::motor_cmd::ConstPtr& msg)
 {
   motor1->speed_motor = msg->motor_desired_speed;
-  motor1->direction   = msg->motor_desired_direction;
   motor1->onoff       = msg->motor_onoff;
 }
 void motor_second_command_callback(const mobile_robot::motor_cmd::ConstPtr& msg)
 {
   motor2->speed_motor = msg->motor_desired_speed;
-  motor2->direction   = msg->motor_desired_direction;
   motor2->onoff       = msg->motor_onoff;
 }
 /////////////////////////////////////////////////////////////////////////////////////
-void motor_control(int id, int motor_line1, int mode, bool direction, int desired_speed_rpm, int angle, bool on_off)
+void motor_control(int pwm_pin, int direction_pin, int mode, int desired_speed_rpm, int angle, bool on_off, DcMotorForRaspberryPi* motor, TrajectoryGenerator* tra_value)
 {
   if(on_off == true)
   {
-    if(direction == true)//CW
+    motor->pwm_value_motor = tra_value->linear_function(desired_speed_rpm, motor->acceleration_value);
+    if(motor->pwm_value_motor > 0)
     {
-      digitalWrite(motor_line1,HIGH);
+      digitalWrite(direction_pin,LOW); //ccw
+      motor->direction = 0;
     }
-    else if (direction == false)//CCW
+    else
     {
-      digitalWrite(motor_line1,LOW);
-    }
-
-    switch (id)
-    {
-    case 1 :
-      motor1->pwm_value_motor = tra_motor1->linear_function(desired_speed_rpm, motor1->acceleration_value);
-      break;
-    case 2 :
-      motor2->pwm_value_motor = tra_motor2->linear_function(desired_speed_rpm, motor2->acceleration_value);
-      break;
-    default :
-      break;
+      digitalWrite(direction_pin,HIGH); //cw
+      motor->direction = 1;
     }
   }
+  if(motor->pwm_value_motor < 0)
+    motor->pwm_value_motor = motor->pwm_value_motor*-1;
 
-  if(on_off == false && desired_speed_rpm == 0)
+  if(on_off == false || desired_speed_rpm <= 10)
   {
-    switch (id)
-       {
-       case 1 :
-         pwmWrite(motor1_PWM, 0);
-         break;
-       case 2 :
-         pwmWrite(motor2_PWM, 0);
-         break;
-       default :
-         break;
-       }
+   pwmWrite(pwm_pin, 0);
   }
 }
 
@@ -165,8 +146,9 @@ void controlFunction(const ros::TimerEvent&)
   motor1->onoff = 1;
   motor2->onoff = 1;
 
-  motor_control(1, motor1_DIR, 0,  motor1->direction, motor1->speed_motor, 0, motor1->onoff);
-  motor_control(2, motor2_DIR, 0,  motor2->direction, motor2->speed_motor, 0, motor2->onoff);
+  motor_control(motor1_PWM, motor1_DIR, 0, motor1->speed_motor, 0, motor1->onoff, motor1, tra_motor1);
+  motor_control(motor2_PWM, motor2_DIR, 0, motor2->speed_motor, 0, motor2->onoff, motor2, tra_motor2);
+
 
   pwmWrite(motor1_PWM, (int) motor1->pwm_value_motor);
   pwmWrite(motor2_PWM, (int) motor2->pwm_value_motor);
@@ -221,8 +203,6 @@ int main (int argc, char **argv)
 
   pwmWrite(motor1_PWM, 0);
   pwmWrite(motor2_PWM, 0);
-
-  
 
   while(ros::ok())
   {
