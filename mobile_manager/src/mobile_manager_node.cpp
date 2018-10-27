@@ -11,13 +11,21 @@ void initialize()
   move_x = 0.0;
   move_y = 0.0;
   speed_ratio_rad = 0.0;
-  max_speed = 100; // pwm
+  max_speed = 200; // pwm
 }
 //callback
 void joy_callback(const sensor_msgs::Joy::ConstPtr& msg)
 {
-  move_x = msg->axes[0];
-  move_y = msg->axes[1];
+  if(pow(msg->axes[0],2)+pow(msg->axes[1],2) > 0.01)
+  {
+    move_x = msg->axes[0];
+    move_y = msg->axes[1];
+  }
+  else
+  {
+    move_x = 0;
+    move_y = 0;
+  }
 
   rotation_left  = msg->buttons[4];
   rotation_right = msg->buttons[5];
@@ -47,8 +55,8 @@ void wheel_move_function(double x, double y)
     }
 
     motor_cmd_msg_1.motor_desired_speed = (max_speed*fabs(sqrt(pow(x,2)+pow(y,2))))*motor_cmd_msg_1.motor_desired_direction;
-    motor_cmd_msg_2.motor_desired_speed = ((max_speed -(max_speed/(45*M_PI/180))*speed_ratio_rad))*motor_cmd_msg_2.motor_desired_direction;
-    motor_cmd_msg_3.motor_desired_speed = ((max_speed -(max_speed/(45*M_PI/180))*speed_ratio_rad))*motor_cmd_msg_3.motor_desired_direction;
+    motor_cmd_msg_2.motor_desired_speed = ((max_speed -(max_speed/(45*M_PI/180))*speed_ratio_rad)*fabs(sqrt(pow(x,2)+pow(y,2))))*motor_cmd_msg_2.motor_desired_direction;
+    motor_cmd_msg_3.motor_desired_speed = ((max_speed -(max_speed/(45*M_PI/180))*speed_ratio_rad)*fabs(sqrt(pow(x,2)+pow(y,2))))*motor_cmd_msg_3.motor_desired_direction;
     motor_cmd_msg_4.motor_desired_speed = (max_speed*fabs(sqrt(pow(x,2)+pow(y,2))))*motor_cmd_msg_4.motor_desired_direction;
   }
   else if(x > 0 && y < 0) //3사분면
@@ -64,10 +72,10 @@ void wheel_move_function(double x, double y)
       wheel_direction_group(-1,1,-1,1);
     }
 
-    motor_cmd_msg_1.motor_desired_speed = ((max_speed -(max_speed/(45*M_PI/180))*speed_ratio_rad))*motor_cmd_msg_1.motor_desired_direction;
+    motor_cmd_msg_1.motor_desired_speed = ((max_speed -(max_speed/(45*M_PI/180))*speed_ratio_rad)*fabs(sqrt(pow(x,2)+pow(y,2))))*motor_cmd_msg_1.motor_desired_direction;
     motor_cmd_msg_2.motor_desired_speed = (max_speed*fabs(sqrt(pow(x,2)+pow(y,2))))*motor_cmd_msg_2.motor_desired_direction;
     motor_cmd_msg_3.motor_desired_speed = (max_speed*fabs(sqrt(pow(x,2)+pow(y,2))))*motor_cmd_msg_3.motor_desired_direction;
-    motor_cmd_msg_4.motor_desired_speed = ((max_speed -(max_speed/(45*M_PI/180))*speed_ratio_rad))*motor_cmd_msg_4.motor_desired_direction;
+    motor_cmd_msg_4.motor_desired_speed = ((max_speed -(max_speed/(45*M_PI/180))*speed_ratio_rad)*fabs(sqrt(pow(x,2)+pow(y,2))))*motor_cmd_msg_4.motor_desired_direction;
   }
   else if(x < 0 && y < 0) //4사분면
   {
@@ -82,8 +90,8 @@ void wheel_move_function(double x, double y)
       wheel_direction_group(-1,1,-1,1);
     }
     motor_cmd_msg_1.motor_desired_speed = (max_speed*fabs(sqrt(pow(x,2)+pow(y,2))))*motor_cmd_msg_1.motor_desired_direction;
-    motor_cmd_msg_2.motor_desired_speed = ((max_speed -(max_speed/(45*M_PI/180))*speed_ratio_rad))*motor_cmd_msg_2.motor_desired_direction;
-    motor_cmd_msg_3.motor_desired_speed = ((max_speed -(max_speed/(45*M_PI/180))*speed_ratio_rad))*motor_cmd_msg_3.motor_desired_direction;
+    motor_cmd_msg_2.motor_desired_speed = ((max_speed -(max_speed/(45*M_PI/180))*speed_ratio_rad)*fabs(sqrt(pow(x,2)+pow(y,2))))*motor_cmd_msg_2.motor_desired_direction;
+    motor_cmd_msg_3.motor_desired_speed = ((max_speed -(max_speed/(45*M_PI/180))*speed_ratio_rad)*fabs(sqrt(pow(x,2)+pow(y,2))))*motor_cmd_msg_3.motor_desired_direction;
     motor_cmd_msg_4.motor_desired_speed = (max_speed*fabs(sqrt(pow(x,2)+pow(y,2))))*motor_cmd_msg_4.motor_desired_direction;
   }
   else if(x < 0 && y > 0) //1사분면
@@ -98,10 +106,10 @@ void wheel_move_function(double x, double y)
       speed_ratio_rad = acos(fabs(y)/fabs(sqrt(pow(x,2)+pow(y,2))));
       wheel_direction_group(1,-1,1,-1);
     }
-    motor_cmd_msg_1.motor_desired_speed = ((max_speed -(max_speed/(45*M_PI/180))*speed_ratio_rad))*motor_cmd_msg_1.motor_desired_direction;
+    motor_cmd_msg_1.motor_desired_speed = ((max_speed -(max_speed/(45*M_PI/180))*speed_ratio_rad)*fabs(sqrt(pow(x,2)+pow(y,2))))*motor_cmd_msg_1.motor_desired_direction;
     motor_cmd_msg_2.motor_desired_speed = (max_speed*fabs(sqrt(pow(x,2)+pow(y,2))))*motor_cmd_msg_2.motor_desired_direction;
     motor_cmd_msg_3.motor_desired_speed = (max_speed*fabs(sqrt(pow(x,2)+pow(y,2))))*motor_cmd_msg_3.motor_desired_direction;
-    motor_cmd_msg_4.motor_desired_speed = ((max_speed -(max_speed/(45*M_PI/180))*speed_ratio_rad))*motor_cmd_msg_4.motor_desired_direction;
+    motor_cmd_msg_4.motor_desired_speed = ((max_speed -(max_speed/(45*M_PI/180))*speed_ratio_rad)*fabs(sqrt(pow(x,2)+pow(y,2))))*motor_cmd_msg_4.motor_desired_direction;
   }
   else if(x == 0 && y > 0) // forward
   {
@@ -125,12 +133,12 @@ void wheel_move_function(double x, double y)
   }
   else // (x=0, y=0) foward initialize // stop
   {
-   // motor_cmd_msg_1.motor_desired_speed = 0;
-   // motor_cmd_msg_2.motor_desired_speed = 0;
-   // motor_cmd_msg_3.motor_desired_speed = 0;
-   // motor_cmd_msg_4.motor_desired_speed = 0;
+    // motor_cmd_msg_1.motor_desired_speed = 0;
+    // motor_cmd_msg_2.motor_desired_speed = 0;
+    // motor_cmd_msg_3.motor_desired_speed = 0;
+    // motor_cmd_msg_4.motor_desired_speed = 0;
   }
-  // speed decision
+  //speed decision
   if(x == 0 || y==0)
   {
     motor_cmd_msg_1.motor_desired_speed = max_speed*fabs(sqrt(pow(x,2)+pow(y,2)))*motor_cmd_msg_1.motor_desired_direction;
@@ -138,6 +146,7 @@ void wheel_move_function(double x, double y)
     motor_cmd_msg_3.motor_desired_speed = max_speed*fabs(sqrt(pow(x,2)+pow(y,2)))*motor_cmd_msg_3.motor_desired_direction;
     motor_cmd_msg_4.motor_desired_speed = max_speed*fabs(sqrt(pow(x,2)+pow(y,2)))*motor_cmd_msg_4.motor_desired_direction;
   }
+
 }
 void wheel_rotation(bool rotation_left, bool rotation_right)
 {
@@ -179,17 +188,16 @@ int main (int argc, char **argv)
 
   joy_sub   = nh.subscribe("/joy", 1, joy_callback);
 
-
   while(ros::ok())
   {
     wheel_move_function(move_x, move_y);
     wheel_rotation(rotation_left, rotation_right);
-    usleep(100);
+
     motor1_pub.publish(motor_cmd_msg_1);
     motor2_pub.publish(motor_cmd_msg_2);
     motor3_pub.publish(motor_cmd_msg_3);
     motor4_pub.publish(motor_cmd_msg_4);
-
+    usleep(100);
 
     printf("---------------------------------------\n");
     printf("DIR Motor1 :: %d \n", motor_cmd_msg_1.motor_desired_direction);
@@ -205,9 +213,6 @@ int main (int argc, char **argv)
 
     ros::spinOnce();
   }
-
-
-
   return 0;
 }
 

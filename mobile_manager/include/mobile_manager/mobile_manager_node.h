@@ -46,7 +46,6 @@ bool rotation_left, rotation_right;
 double max_speed;
 double speed_ratio_rad;
 
-
 //function
 void initialize();
 void wheel_move_function(double x, double y);
