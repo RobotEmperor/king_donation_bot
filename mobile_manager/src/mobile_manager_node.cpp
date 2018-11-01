@@ -12,6 +12,9 @@ void initialize()
   move_y = 0.0;
   speed_ratio_rad = 0.0;
   max_speed = 200; // pwm
+  rqyToQ = robotis_framework::convertRPYToQuaternion(0,0,0);
+
+  arm_displacement_msg.name = "left";
 }
 //callback
 void joy_callback(const sensor_msgs::Joy::ConstPtr& msg)
@@ -26,11 +29,44 @@ void joy_callback(const sensor_msgs::Joy::ConstPtr& msg)
     move_x = 0;
     move_y = 0;
   }
-
   rotation_left  = msg->buttons[4];
   rotation_right = msg->buttons[5];
+
+  if(fabs(msg->axes[3])>0.1)
+  {
+    arm_displacement_msg.pose.position.x = msg->axes[3]*0.005;
+  }
+  else
+  {
+    arm_displacement_msg.pose.position.x = 0;
+  }
+  if(fabs(msg->axes[4])>0.1)
+  {
+    arm_displacement_msg.pose.position.y = msg->axes[4]*0.005;
+  }
+  else
+  {
+    arm_displacement_msg.pose.position.y = 0;
+  }
+
+  arm_displacement_msg.pose.position.z = msg->axes[6]*0.005;
+
+  rqyToQ = robotis_framework::convertRPYToQuaternion(0,0.01*msg->axes[7],0);
+  arm_displacement_msg.pose.orientation.x = rqyToQ.x();
+  arm_displacement_msg.pose.orientation.y = rqyToQ.y();
+  arm_displacement_msg.pose.orientation.z = rqyToQ.z();
+  arm_displacement_msg.pose.orientation.w = rqyToQ.w();
+
+  arm_displacement_pub.publish(arm_displacement_msg);
+
+  for(int idx = 0; idx <4; idx++)
+  {
+    if(msg->buttons[idx] == 1)
+      script_number_msg.data = idx+1;
+  }
+
+  script_number_pub.publish(script_number_msg);
 }
-//
 void wheel_direction_group(int8_t motor1, int8_t motor2, int8_t motor3, int8_t motor4)
 {
   motor_cmd_msg_1.motor_desired_direction = motor1;
@@ -186,6 +222,9 @@ int main (int argc, char **argv)
   motor3_pub = nh.advertise<mobile_manager::motor_cmd>("/motor_3",10);
   motor4_pub = nh.advertise<mobile_manager::motor_cmd>("/motor_4",10);
 
+  arm_displacement_pub = nh.advertise<erica_arm_module_msgs::ArmCmd>("/heroehs/arm/displacement",1);
+  script_number_pub = nh.advertise<std_msgs::Int32>("/heroehs/script_number",1);
+
   joy_sub   = nh.subscribe("/joy", 1, joy_callback);
 
   while(ros::ok())
@@ -199,17 +238,16 @@ int main (int argc, char **argv)
     motor4_pub.publish(motor_cmd_msg_4);
     usleep(100);
 
-    printf("---------------------------------------\n");
+/*  printf("---------------------------------------\n");
     printf("DIR Motor1 :: %d \n", motor_cmd_msg_1.motor_desired_direction);
     printf("DIR Motor2 :: %d \n", motor_cmd_msg_2.motor_desired_direction);
     printf("DIR Motor3 :: %d \n", motor_cmd_msg_3.motor_desired_direction);
     printf("DIR Motor4 :: %d \n", motor_cmd_msg_4.motor_desired_direction);
     printf("---------------------------------------\n");
-
     printf("2    %f    ", motor_cmd_msg_2.motor_desired_speed);
     printf("1    %f \n" , motor_cmd_msg_1.motor_desired_speed);
     printf("4    %f    ", motor_cmd_msg_4.motor_desired_speed);
-    printf("3    %f \n" , motor_cmd_msg_3.motor_desired_speed);
+    printf("3    %f \n" , motor_cmd_msg_3.motor_desired_speed);*/
 
     ros::spinOnce();
   }

@@ -14,11 +14,14 @@
 #include <std_msgs/String.h>
 #include <std_msgs/Float64.h>
 #include <std_msgs/Float64MultiArray.h>
+#include <std_msgs/Int32.h>
 #include <geometry_msgs/Twist.h>
 #include <sensor_msgs/Joy.h>
 
 //custom header
 #include <mobile_manager/motor_cmd.h>
+#include <erica_arm_module_msgs/ArmCmd.h>
+#include <robotis_math/robotis_math.h>
 
 
 //ros communication
@@ -27,6 +30,10 @@ ros::Publisher  motor2_pub;
 
 ros::Publisher  motor3_pub;
 ros::Publisher  motor4_pub;
+
+
+ros::Publisher arm_displacement_pub;
+ros::Publisher script_number_pub;
 
 
 //ros::Subscriber motor_theta_dist_sub;
@@ -39,12 +46,16 @@ mobile_manager::motor_cmd motor_cmd_msg_2;
 mobile_manager::motor_cmd motor_cmd_msg_3;
 mobile_manager::motor_cmd motor_cmd_msg_4;
 
+erica_arm_module_msgs::ArmCmd arm_displacement_msg;
+
+std_msgs::Int32 script_number_msg;
 
 //variables
 double move_x, move_y;
 bool rotation_left, rotation_right;
 double max_speed;
 double speed_ratio_rad;
+Eigen::Quaterniond rqyToQ;
 
 //function
 void initialize();

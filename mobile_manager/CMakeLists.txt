@@ -8,6 +8,8 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   geometry_msgs
   message_generation
+  erica_arm_module_msgs
+  robotis_math
 )
 
 
