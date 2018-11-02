@@ -57,6 +57,9 @@ double max_speed;
 double speed_ratio_rad;
 Eigen::Quaterniond rqyToQ;
 
+ros::Time count;
+
+
 //function
 void initialize();
 void wheel_move_function(double x, double y);

@@ -13,12 +13,57 @@ void initialize()
   speed_ratio_rad = 0.0;
   max_speed = 200; // pwm
   rqyToQ = robotis_framework::convertRPYToQuaternion(0,0,0);
-
+  count = ros::Time::now();
   arm_displacement_msg.name = "left";
 }
 //callback
 void joy_callback(const sensor_msgs::Joy::ConstPtr& msg)
 {
+
+  if((ros::Time::now() - count).toSec() > 0.03)
+  {
+    if(fabs(msg->axes[4])>0.1)
+      {
+        arm_displacement_msg.pose.position.x = msg->axes[4]*0.001;
+      }
+      else
+      {
+        arm_displacement_msg.pose.position.x = 0;
+      }
+      if(fabs(msg->axes[3])>0.1)
+      {
+        arm_displacement_msg.pose.position.y = msg->axes[3]*0.001;
+      }
+      else
+      {
+        arm_displacement_msg.pose.position.y = 0;
+      }
+
+      arm_displacement_msg.pose.position.z = msg->axes[6]*0.001;
+
+      rqyToQ = robotis_framework::convertRPYToQuaternion(0,0.01*msg->axes[7],0);
+      arm_displacement_msg.pose.orientation.x = rqyToQ.x();
+      arm_displacement_msg.pose.orientation.y = rqyToQ.y();
+      arm_displacement_msg.pose.orientation.z = rqyToQ.z();
+      arm_displacement_msg.pose.orientation.w = rqyToQ.w();
+
+      arm_displacement_pub.publish(arm_displacement_msg);
+
+      for(int idx = 0; idx <4; idx++)
+      {
+        if(msg->buttons[idx] == 1)
+          script_number_msg.data = idx+1;
+      }
+
+      script_number_pub.publish(script_number_msg);
+
+    count = ros::Time::now();
+  }
+  else
+  {
+    return;
+  }
+
   if(pow(msg->axes[0],2)+pow(msg->axes[1],2) > 0.01)
   {
     move_x = msg->axes[0];
@@ -31,41 +76,6 @@ void joy_callback(const sensor_msgs::Joy::ConstPtr& msg)
   }
   rotation_left  = msg->buttons[4];
   rotation_right = msg->buttons[5];
-
-  if(fabs(msg->axes[4])>0.1)
-  {
-    arm_displacement_msg.pose.position.x = msg->axes[4]*0.001;
-  }
-  else
-  {
-    arm_displacement_msg.pose.position.x = 0;
-  }
-  if(fabs(msg->axes[3])>0.1)
-  {
-    arm_displacement_msg.pose.position.y = msg->axes[3]*0.001;
-  }
-  else
-  {
-    arm_displacement_msg.pose.position.y = 0;
-  }
-
-  arm_displacement_msg.pose.position.z = msg->axes[6]*0.001;
-
-  rqyToQ = robotis_framework::convertRPYToQuaternion(0,0.01*msg->axes[7],0);
-  arm_displacement_msg.pose.orientation.x = rqyToQ.x();
-  arm_displacement_msg.pose.orientation.y = rqyToQ.y();
-  arm_displacement_msg.pose.orientation.z = rqyToQ.z();
-  arm_displacement_msg.pose.orientation.w = rqyToQ.w();
-
-  arm_displacement_pub.publish(arm_displacement_msg);
-
-  for(int idx = 0; idx <4; idx++)
-  {
-    if(msg->buttons[idx] == 1)
-      script_number_msg.data = idx+1;
-  }
-
-  script_number_pub.publish(script_number_msg);
 }
 void wheel_direction_group(int8_t motor1, int8_t motor2, int8_t motor3, int8_t motor4)
 {
@@ -214,6 +224,8 @@ void wheel_rotation(bool rotation_left, bool rotation_right)
 int main (int argc, char **argv)
 {
   ros::init(argc, argv, "mobile_manager_node");
+
+
   ros::NodeHandle nh;
   initialize();
 
