@@ -32,24 +32,24 @@ void joy_callback(const sensor_msgs::Joy::ConstPtr& msg)
   rotation_left  = msg->buttons[4];
   rotation_right = msg->buttons[5];
 
-  if(fabs(msg->axes[3])>0.1)
+  if(fabs(msg->axes[4])>0.1)
   {
-    arm_displacement_msg.pose.position.x = msg->axes[3]*0.005;
+    arm_displacement_msg.pose.position.x = msg->axes[4]*0.001;
   }
   else
   {
     arm_displacement_msg.pose.position.x = 0;
   }
-  if(fabs(msg->axes[4])>0.1)
+  if(fabs(msg->axes[3])>0.1)
   {
-    arm_displacement_msg.pose.position.y = msg->axes[4]*0.005;
+    arm_displacement_msg.pose.position.y = msg->axes[3]*0.001;
   }
   else
   {
     arm_displacement_msg.pose.position.y = 0;
   }
 
-  arm_displacement_msg.pose.position.z = msg->axes[6]*0.005;
+  arm_displacement_msg.pose.position.z = msg->axes[6]*0.001;
 
   rqyToQ = robotis_framework::convertRPYToQuaternion(0,0.01*msg->axes[7],0);
   arm_displacement_msg.pose.orientation.x = rqyToQ.x();
