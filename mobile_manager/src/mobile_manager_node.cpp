@@ -52,11 +52,11 @@ void joy_callback(const sensor_msgs::Joy::ConstPtr& msg)
       for(int idx = 0; idx <4; idx++)
       {
         if(msg->buttons[idx] == 1)
+        {
           script_number_msg.data = idx+1;
+          script_number_pub.publish(script_number_msg);
+        }
       }
-
-      script_number_pub.publish(script_number_msg);
-
     count = ros::Time::now();
   }
   else
