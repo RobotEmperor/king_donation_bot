@@ -35,6 +35,8 @@ ros::Publisher  motor4_pub;
 ros::Publisher arm_displacement_pub;
 ros::Publisher script_number_pub;
 
+ros::Publisher enable_module_pub;
+
 
 //ros::Subscriber motor_theta_dist_sub;
 ros::Subscriber joy_sub;
@@ -49,6 +51,8 @@ mobile_manager::motor_cmd motor_cmd_msg_4;
 erica_arm_module_msgs::ArmCmd arm_displacement_msg;
 
 std_msgs::Int32 script_number_msg;
+
+std_msgs::String enable_module_msg;
 
 //variables
 double move_x, move_y;

@@ -11,7 +11,7 @@ void initialize()
   move_x = 0.0;
   move_y = 0.0;
   speed_ratio_rad = 0.0;
-  max_speed = 80; // pwm
+  max_speed = 100; // pwm
   rqyToQ = robotis_framework::convertRPYToQuaternion(0,0,0);
   count = ros::Time::now();
   arm_displacement_msg.name = "left";
@@ -87,12 +87,27 @@ void joy_callback(const sensor_msgs::Joy::ConstPtr& msg)
     rotation_right = 0;
   }
 
-  if(msg->buttons[6] == 0)
+  if(msg->buttons[6] == 1)
   {
+    enable_module_msg.data = "arm_module";
+    enable_module_pub.publish(enable_module_msg);
     motor_cmd_msg_1.motor_desired_speed = 0;
     motor_cmd_msg_2.motor_desired_speed = 0;
     motor_cmd_msg_3.motor_desired_speed = 0;
     motor_cmd_msg_4.motor_desired_speed = 0;
+    script_number_msg.data = 0;
+    script_number_pub.publish(script_number_msg);
+  }
+  if(msg->buttons[7] == 1)
+  {
+    enable_module_msg.data = "action_module";
+    enable_module_pub.publish(enable_module_msg);
+    motor_cmd_msg_1.motor_desired_speed = 0;
+    motor_cmd_msg_2.motor_desired_speed = 0;
+    motor_cmd_msg_3.motor_desired_speed = 0;
+    motor_cmd_msg_4.motor_desired_speed = 0;
+    script_number_msg.data = 0;
+    script_number_pub.publish(script_number_msg);
   }
 }
 void wheel_direction_group(int8_t motor1, int8_t motor2, int8_t motor3, int8_t motor4)
@@ -262,6 +277,7 @@ int main (int argc, char **argv)
 
   arm_displacement_pub = nh.advertise<erica_arm_module_msgs::ArmCmd>("/heroehs/arm/displacement",1);
   script_number_pub = nh.advertise<std_msgs::Int32>("/heroehs/script_number",1);
+  enable_module_pub = nh.advertise<std_msgs::String>("/robotis/enable_ctrl_module", 1);
 
   joy_sub   = nh.subscribe("/joy", 1, joy_callback);
 
