@@ -1,9 +1,0 @@
-<?xml version="1.0" ?>
-
-<launch>    
-     <!-- mobile Manager -->
-    <node name="mobile_manager_node" pkg="mobile_manager" type="mobile_manager_node" output="screen"/>
-    <!--<node name="mobile_manager_node" pkg="mobile_manager" type="mobile_manager_node" output="screen"/>-->
-
-</launch>
-
