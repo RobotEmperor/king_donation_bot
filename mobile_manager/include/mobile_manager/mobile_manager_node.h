@@ -40,6 +40,7 @@ ros::Publisher enable_module_pub;
 
 //ros::Subscriber motor_theta_dist_sub;
 ros::Subscriber joy_sub;
+ros::Subscriber desired_vector_sub;
 
 
 //ros msg
@@ -71,6 +72,7 @@ void wheel_direction_group(int8_t motor1, int8_t motor2, int8_t motor3, int8_t m
 void wheel_rotation(bool rotation_left, bool rotation_right);
 //callback
 void joy_callback(const sensor_msgs::Joy::ConstPtr& msg);
+void desired_vector_callback(const geometry_msgs::Pose::ConstPtr& msg);
 
 
 

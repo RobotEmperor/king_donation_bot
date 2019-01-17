@@ -16,7 +16,7 @@ void initialize()
   count = ros::Time::now();
   arm_displacement_msg.name = "left";
 }
-//callback
+//callback///////////////////////////////////////////////
 void joy_callback(const sensor_msgs::Joy::ConstPtr& msg)
 {
 
@@ -110,6 +110,23 @@ void joy_callback(const sensor_msgs::Joy::ConstPtr& msg)
     script_number_pub.publish(script_number_msg);
   }
 }
+
+void desired_vector_callback(const geometry_msgs::Pose::ConstPtr& msg)
+{
+  if(pow(msg->position.x,2)+pow(msg->position.y,2) > 0.01)
+    {
+      move_x = msg->position.x;
+      move_y = msg->position.y;
+    }
+    else
+    {
+      move_x = 0;
+      move_y = 0;
+    }
+
+  ROS_INFO("X :: %f ,  Y :: %f \n", move_x, move_y);
+}
+///////////////////////////////////////////////////////////////////////////
 void wheel_direction_group(int8_t motor1, int8_t motor2, int8_t motor3, int8_t motor4)
 {
   motor_cmd_msg_1.motor_desired_direction = motor1;
@@ -280,6 +297,8 @@ int main (int argc, char **argv)
   enable_module_pub = nh.advertise<std_msgs::String>("/robotis/enable_ctrl_module", 1);
 
   joy_sub   = nh.subscribe("/joy", 1, joy_callback);
+  desired_vector_sub = nh.subscribe("/erica/desired_vector", 1, desired_vector_callback);
+
 
   while(ros::ok())
   {
