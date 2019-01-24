@@ -115,8 +115,8 @@ void desired_vector_callback(const geometry_msgs::Pose::ConstPtr& msg)
 {
   if(pow(msg->position.x,2)+pow(msg->position.y,2) > 0.01)
     {
-      move_x = msg->position.x;
-      move_y = msg->position.y;
+      move_x = msg->position.y;
+      move_y = msg->position.x;
     }
     else
     {
