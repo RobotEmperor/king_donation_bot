@@ -38,10 +38,6 @@ ros::Publisher script_number_pub;
 ros::Publisher enable_module_pub;
 
 
-//ros::Subscriber motor_theta_dist_sub;
-ros::Subscriber joy_sub;
-ros::Subscriber desired_vector_sub;
-
 
 //ros msg
 mobile_manager::motor_cmd motor_cmd_msg_1;

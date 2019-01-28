@@ -12,8 +12,6 @@ find_package(catkin REQUIRED COMPONENTS
   robotis_math
 )
 
-
-
  add_message_files(
    FILES
    motor_cmd.msg
@@ -35,7 +33,6 @@ catkin_package(
   #DEPENDS system_lib
 
 )
-
 
 include_directories(include ${catkin_INCLUDE_DIRS} )
 

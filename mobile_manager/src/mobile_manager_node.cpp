@@ -296,8 +296,9 @@ int main (int argc, char **argv)
   script_number_pub = nh.advertise<std_msgs::Int32>("/heroehs/script_number",1);
   enable_module_pub = nh.advertise<std_msgs::String>("/robotis/enable_ctrl_module", 1);
 
-  joy_sub   = nh.subscribe("/joy", 1, joy_callback);
-  desired_vector_sub = nh.subscribe("/erica/desired_vector", 1, desired_vector_callback);
+  //ros::Subscriber motor_theta_dist_sub;
+  ros::Subscriber joy_sub   = nh.subscribe("/joy", 1, joy_callback);
+  ros::Subscriber desired_vector_sub = nh.subscribe("/erica/desired_vector", 1, desired_vector_callback);
 
 
   while(ros::ok())
