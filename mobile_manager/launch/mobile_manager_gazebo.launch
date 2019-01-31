@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
 
-<launch> 
-    <param name="gazebo_check"       value="false" type="bool"/>   
+<launch>    
+     <param name="gazebo_check"       value="true" type="bool"/>
      <!-- mobile Manager -->
     <node name="mobile_manager_node" pkg="mobile_manager" type="mobile_manager_node" output="screen"/>
     

@@ -8,6 +8,7 @@
 
 void initialize()
 {
+  gazebo_check = false;
   move_x = 0.0;
   move_y = 0.0;
   speed_ratio_rad = 0.0;
@@ -287,10 +288,17 @@ int main (int argc, char **argv)
   ros::NodeHandle nh;
   initialize();
 
+  nh.param("gazebo_check",  gazebo_check, false);
+
   motor1_pub = nh.advertise<mobile_manager::motor_cmd>("/motor_1",10);
   motor2_pub = nh.advertise<mobile_manager::motor_cmd>("/motor_2",10);
   motor3_pub = nh.advertise<mobile_manager::motor_cmd>("/motor_3",10);
   motor4_pub = nh.advertise<mobile_manager::motor_cmd>("/motor_4",10);
+
+  front_left_pub  = nh.advertise<std_msgs::Float32>("/front_left",1);
+  front_right_pub = nh.advertise<std_msgs::Float32>("/front_right",1);
+  back_left_pub   = nh.advertise<std_msgs::Float32>("/back_left",1);
+  back_right_pub  = nh.advertise<std_msgs::Float32>("/back_right",1);
 
   arm_displacement_pub = nh.advertise<erica_arm_module_msgs::ArmCmd>("/heroehs/arm/displacement",1);
   script_number_pub = nh.advertise<std_msgs::Int32>("/heroehs/script_number",1);
@@ -310,9 +318,22 @@ int main (int argc, char **argv)
     motor2_pub.publish(motor_cmd_msg_2);
     motor3_pub.publish(motor_cmd_msg_3);
     motor4_pub.publish(motor_cmd_msg_4);
-    usleep(100);
 
-    /*printf("---------------------------------------\n");
+    if(gazebo_check)
+    {
+      front_left_msg.data  =  (float) (motor_cmd_msg_2.motor_desired_speed*-1.0*0.05);
+      front_right_msg.data =  (float) (motor_cmd_msg_1.motor_desired_speed*0.05);
+      back_left_msg.data   =  (float) (motor_cmd_msg_4.motor_desired_speed*-1.0*0.05);
+      back_right_msg.data  =  (float) (motor_cmd_msg_3.motor_desired_speed*0.05);
+
+      front_left_pub.publish(front_left_msg);
+      front_right_pub.publish(front_right_msg);
+      back_left_pub.publish(back_left_msg);
+      back_right_pub.publish(back_right_msg);
+    }
+    usleep(100);
+/*
+    printf("---------------------------------------\n");
     printf("DIR Motor1 :: %d \n", motor_cmd_msg_1.motor_desired_direction);
     printf("DIR Motor2 :: %d \n", motor_cmd_msg_2.motor_desired_direction);
     printf("DIR Motor3 :: %d \n", motor_cmd_msg_3.motor_desired_direction);
@@ -322,9 +343,7 @@ int main (int argc, char **argv)
     printf("1    %f \n" , motor_cmd_msg_1.motor_desired_speed);
     printf("4    %f    ", motor_cmd_msg_4.motor_desired_speed);
     printf("3    %f \n" , motor_cmd_msg_3.motor_desired_speed);
-
-
-     */
+*/
     ros::spinOnce();
   }
   return 0;

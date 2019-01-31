@@ -13,6 +13,7 @@
 //ros_communication_message type
 #include <std_msgs/String.h>
 #include <std_msgs/Float64.h>
+#include <std_msgs/Float32.h>
 #include <std_msgs/Float64MultiArray.h>
 #include <std_msgs/Int32.h>
 #include <geometry_msgs/Twist.h>
@@ -36,6 +37,20 @@ ros::Publisher arm_displacement_pub;
 ros::Publisher script_number_pub;
 
 ros::Publisher enable_module_pub;
+
+
+//gazebo
+ros::Publisher front_left_pub;
+ros::Publisher front_right_pub;
+ros::Publisher back_left_pub;
+ros::Publisher back_right_pub;
+
+std_msgs::Float32 front_left_msg;
+std_msgs::Float32 front_right_msg;
+std_msgs::Float32 back_left_msg;
+std_msgs::Float32 back_right_msg;
+
+bool gazebo_check;
 
 
 
