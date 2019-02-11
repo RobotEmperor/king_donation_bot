@@ -16,6 +16,7 @@
 #include <std_msgs/Float32.h>
 #include <std_msgs/Float64MultiArray.h>
 #include <std_msgs/Int32.h>
+#include <std_msgs/Int8.h>
 #include <geometry_msgs/Twist.h>
 #include <sensor_msgs/Joy.h>
 
@@ -37,7 +38,6 @@ ros::Publisher arm_displacement_pub;
 ros::Publisher script_number_pub;
 
 ros::Publisher enable_module_pub;
-
 
 //gazebo
 ros::Publisher front_left_pub;

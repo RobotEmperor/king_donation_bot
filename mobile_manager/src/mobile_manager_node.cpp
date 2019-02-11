@@ -115,17 +115,52 @@ void joy_callback(const sensor_msgs::Joy::ConstPtr& msg)
 void desired_vector_callback(const geometry_msgs::Pose::ConstPtr& msg)
 {
   if(pow(msg->position.x,2)+pow(msg->position.y,2) > 0.01)
-    {
-      move_x = msg->position.y;
-      move_y = msg->position.x;
-    }
-    else
-    {
-      move_x = 0;
-      move_y = 0;
-    }
+  {
+    move_x = msg->position.y;
+    move_y = msg->position.x;
+  }
+  else
+  {
+    move_x = 0;
+    move_y = 0;
+  }
+}
 
-  ROS_INFO("X :: %f ,  Y :: %f \n", move_x, move_y);
+void arrivals_action_command_callback(const std_msgs::Int8::ConstPtr& msg)
+{
+  switch (msg->data)
+  {
+  case 0:
+  {
+    rotation_left = 0;
+    rotation_right = 0;
+  }
+  break;
+  case 4:
+  {
+    rotation_left = 1;
+    rotation_right = 0;
+  }
+  break;
+  case 5:
+  {
+    rotation_left = 0;
+    rotation_right = 1;
+  }
+  break;
+  case 1:
+   {
+     script_number_msg.data = 1;
+     script_number_pub.publish(script_number_msg);
+   }
+   break;
+  default:
+  {
+    rotation_left = 0;
+    rotation_right = 0;
+  }
+  break;
+  }
 }
 ///////////////////////////////////////////////////////////////////////////
 void wheel_direction_group(int8_t motor1, int8_t motor2, int8_t motor3, int8_t motor4)
@@ -307,7 +342,7 @@ int main (int argc, char **argv)
   //ros::Subscriber motor_theta_dist_sub;
   ros::Subscriber joy_sub   = nh.subscribe("/joy", 1, joy_callback);
   ros::Subscriber desired_vector_sub = nh.subscribe("/erica/desired_vector", 1, desired_vector_callback);
-
+  ros::Subscriber arrivals_action_command_sub = nh.subscribe("/erica/arrivals_action_command", 1, arrivals_action_command_callback);
 
   while(ros::ok())
   {
@@ -332,7 +367,7 @@ int main (int argc, char **argv)
       back_right_pub.publish(back_right_msg);
     }
     usleep(100);
-/*
+    /*
     printf("---------------------------------------\n");
     printf("DIR Motor1 :: %d \n", motor_cmd_msg_1.motor_desired_direction);
     printf("DIR Motor2 :: %d \n", motor_cmd_msg_2.motor_desired_direction);
@@ -343,7 +378,7 @@ int main (int argc, char **argv)
     printf("1    %f \n" , motor_cmd_msg_1.motor_desired_speed);
     printf("4    %f    ", motor_cmd_msg_4.motor_desired_speed);
     printf("3    %f \n" , motor_cmd_msg_3.motor_desired_speed);
-*/
+     */
     ros::spinOnce();
   }
   return 0;
