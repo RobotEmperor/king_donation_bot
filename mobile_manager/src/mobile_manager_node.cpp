@@ -132,30 +132,37 @@ void arrivals_action_command_callback(const std_msgs::Int8::ConstPtr& msg)
   {
   case 0:
   {
+    max_speed = 100;
     rotation_left = 0;
     rotation_right = 0;
   }
   break;
   case 4:
   {
+    max_speed = 50;
     rotation_left = 1;
     rotation_right = 0;
   }
   break;
   case 5:
   {
+    max_speed = 50;
     rotation_left = 0;
     rotation_right = 1;
   }
   break;
   case 1:
    {
+     max_speed = 100;
+     rotation_left = 0;
+     rotation_right = 0;
      script_number_msg.data = 1;
      script_number_pub.publish(script_number_msg);
    }
    break;
   default:
   {
+    max_speed = 100;
     rotation_left = 0;
     rotation_right = 0;
   }
