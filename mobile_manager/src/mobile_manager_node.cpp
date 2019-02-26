@@ -139,14 +139,14 @@ void arrivals_action_command_callback(const std_msgs::Int8::ConstPtr& msg)
   break;
   case 4:
   {
-    max_speed = 25;
+    max_speed = 21;
     rotation_left = 1;
     rotation_right = 0;
   }
   break;
   case 5:
   {
-    max_speed = 50;
+    max_speed = 21;
     rotation_left = 0;
     rotation_right = 1;
   }
